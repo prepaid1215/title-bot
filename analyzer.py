@@ -12,7 +12,7 @@ with open("prompt.txt", "r", encoding="utf-8") as f:
     SYSTEM_PROMPT = f.read()
 
 
-def analyze_and_generate(keyword: str, blog_titles: list[str], cafe_titles: list[str]) -> dict:
+def analyze_and_generate(keyword: str, blog_titles: list[str], cafe_titles: list[str], system_prompt: str = None) -> dict:
     """
     수집된 제목을 분석하고 새 제목을 생성
     """
@@ -76,9 +76,11 @@ def analyze_and_generate(keyword: str, blog_titles: list[str], cafe_titles: list
   ]
 }}"""
 
+    prompt = system_prompt if system_prompt else SYSTEM_PROMPT
+
     response = client.models.generate_content(
         model=MODEL,
-        contents=SYSTEM_PROMPT + "\n\n" + user_prompt,
+        contents=prompt + "\n\n" + user_prompt,
         config={
             "temperature": 0.8,
             "max_output_tokens": 8192,
